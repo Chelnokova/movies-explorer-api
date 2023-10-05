@@ -1,4 +1,4 @@
-const Movie = require('../models/user');
+const Movie = require('../models/movie');
 
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
@@ -13,49 +13,46 @@ const getSaveMovies = (req, res, next) => {
     .catch(next);
 };
 
-// const createMovie = (req, res, next) => {
-  // const {
-  //   country,
-  //   director,
-  //   duration,
-  //   year,
-  //   description,
-  //   image,
-  //   trailerLink,
-  //   thumbnail,
-  //   movieId,
-  //   nameRU,
-  //   nameEN,
-  // } = req.body;
+const createMovie = (req, res, next) => {
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+  } = req.body;
 
-  // console.log(req.user);
-
-  // Movie.create({
-  //   country,
-  //   director,
-  //   duration,
-  //   year,
-  //   description,
-  //   image,
-  //   trailerLink,
-  //   thumbnail,
-  //   // owner: req.user._id,
-  //   movieId,
-  //   nameRU,
-  //   nameEN,
-  // })
-  //   .then((movie) => {
-  //     res.send({ data: movie });
-  //   })
-  //   .catch((err) => {
-  //     // console.log(err);
-  //     if (err.name === 'ValidationError') {
-  //       next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
-  //     } else {
-  //       next(err);
-  //     }
-  //   });
-// };
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    owner: req.user._id,
+    movieId,
+    nameRU,
+    nameEN,
+  })
+    .then((movie) => {
+      res.send({ data: movie });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
+      } else {
+        next(err);
+      }
+    });
+};
 
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params.cardId)
