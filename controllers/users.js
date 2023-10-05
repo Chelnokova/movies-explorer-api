@@ -99,9 +99,17 @@ const login = (req, res, next) => {
     .catch(next);
 };
 
+const exitProfile = (req, res) => {
+  res.clearCookie('jwt');
+  res.send({ message: 'Выход успешно выполнен.' });
+};
+
 module.exports = {
   getCurrentUser,
   createUser,
   login,
   updateUserProfile,
+  exitProfile,
 };
+
+// res.send({ message: 'Выход успешно выполнен.' });
