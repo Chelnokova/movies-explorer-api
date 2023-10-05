@@ -1,15 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { rateLimit } = require('express-rate-limit');
-const { errors } = require('celebrate');
 const cors = require('cors');
 const helmet = require('helmet');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const auth = require('./middlewares/auth');
-const { login, createUser } = require('./controllers/users');
-const { validationAuth, validationRegister } = require('./utils/validation-joi');
 const errorHandler = require('./middlewares/error-handler');
-const NotFoundError = require('./errors/NotFoundError');
+const routers = require('./routes');
 
 const { PORT = 3000 } = process.env;
 
@@ -45,28 +41,16 @@ app.use(requestLogger);
 
 app.use('/', express.json());
 
-app.use(helmet());
-app.use(limiter);
-
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
 
-app.use('/movies', auth, require('./routes/movies'));
-app.use('/users', auth, require('./routes/users'));
-
-app.post('/signin', validationAuth, login);
-app.post('/signup', validationRegister, createUser);
-
-app.use('*', () => {
-  throw new NotFoundError('Неправильный путь');
-});
-
+app.use(helmet());
+app.use(limiter);
+app.use(routers);
 app.use(errorLogger);
-
-app.use(errors());
 
 app.use(errorHandler);
 
