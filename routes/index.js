@@ -12,7 +12,7 @@ routers.use('/users', auth, require('./users'));
 routers.post('/signin', validationAuth, login);
 routers.post('/signup', validationRegister, createUser);
 routers.post('/signout', exitProfile);
-routers.use('*', () => {
+routers.use('*', auth, () => {
   throw new NotFoundError('Неправильный путь');
 });
 

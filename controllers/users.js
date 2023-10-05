@@ -111,5 +111,3 @@ module.exports = {
   updateUserProfile,
   exitProfile,
 };
-
-// res.send({ message: 'Выход успешно выполнен.' });

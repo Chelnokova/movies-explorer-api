@@ -1,24 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { rateLimit } = require('express-rate-limit');
 const cors = require('cors');
 const helmet = require('helmet');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error-handler');
 const routers = require('./routes');
+const limiter = require('./utils/limiter');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB_ADDRESS = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
 
 const app = express();
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 100,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-});
-
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
+mongoose.connect(DB_ADDRESS, {
   useNewUrlParser: true,
 })
   .then(() => {
@@ -31,10 +24,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
 app.use(cors({
   origin: [
     'http://localhost:3001',
-    'https://localhost:3001',
-    'http://julia.students.nomoredomainsrocks.ru',
-    'https://julia.students.nomoredomainsrocks.ru',
-    'https://api.julia.students.nomoredomainsrocks.ru'],
+    'https://localhost:3001'],
 }));
 
 app.use(requestLogger);
