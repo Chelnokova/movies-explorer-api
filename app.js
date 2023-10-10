@@ -7,7 +7,7 @@ const errorHandler = require('./middlewares/error-handler');
 const routers = require('./routes');
 const limiter = require('./utils/limiter');
 
-const { PORT = 3000, DB_ADDRESS = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
+const { PORT = 4000, DB_ADDRESS = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
 
 const app = express();
 
