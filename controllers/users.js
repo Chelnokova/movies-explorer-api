@@ -5,7 +5,6 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
 
@@ -28,17 +27,15 @@ const updateUserProfile = (req, res, next) => {
     { name, email },
     opts,
   ).then((user) => {
-    if (!user) {
-      throw new NotFoundError('Пользователь по указанному _id не найден.');
-    }
-    return res.send({ data: user });
+    res.send({ data: user });
   })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
-      } else {
-        next(err);
+      if (err.code === 11000) {
+        return next(new ConflictError('Пользователь с таким email уже существует.'));
+      } if (err.name === 'ValidationError') {
+        return next(new BadRequestError('Переданы некорректные данные при обновлении пользователя.'));
       }
+      return next(err);
     });
 };
 
