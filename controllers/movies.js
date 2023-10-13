@@ -70,7 +70,7 @@ const deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при создании.'));
+        next(new BadRequestError('Переданы некорректные данные фильма.'));
       } else {
         next(err);
       }

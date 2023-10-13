@@ -65,12 +65,11 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует.'));
+        return next(new ConflictError('Пользователь с таким email уже существует.'));
       } if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
-      } else {
-        next(err);
+        return next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
       }
+      return next(err);
     });
 };
 
@@ -100,8 +99,7 @@ const login = (req, res, next) => {
 };
 
 const exitProfile = (req, res) => {
-  res.clearCookie('jwt');
-  res.send({ message: 'Выход успешно выполнен.' });
+  res.clearCookie('jwt').send({ message: 'Выход успешно выполнен.' });
 };
 
 module.exports = {
