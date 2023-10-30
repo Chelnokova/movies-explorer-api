@@ -25,8 +25,12 @@ mongoose.connect(DB_ADDRESS, {
 
 app.use(cors({
   origin: [
+    'http://localhost:3000',
+    'https://localhost:3000',
     'http://localhost:3001',
     'https://localhost:3001',
+    'http://julia.movies.nomoredomainsrocks.ru',
+    'https://julia.movies.nomoredomainsrocks.ru',
     'http://api.julia.movies.nomoredomainsrocks.ru',
     'https://api.julia.movies.nomoredomainsrocks.ru'],
 }));
